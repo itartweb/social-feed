@@ -4,7 +4,7 @@ Get feeds from different social networks in a unified format
 
 ## Install
 
-Use composer: `composer require codeurs/social-feed`
+Use composer: `composer require brynj-digital/social-feed`
 
 ## Features
 
