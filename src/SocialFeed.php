@@ -1,6 +1,6 @@
 <?php
 
-namespace Codeurs\SocialFeed;
+namespace Brynjdigital\SocialFeed;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 
@@ -360,7 +360,7 @@ class TwitterService extends SocialFeedService {
 }
 
 class FacebookService extends SocialFeedService {
-	const API_URL = 'https://graph.facebook.com/v2.3/';
+	const API_URL = 'https://graph.facebook.com/v2.8/';
 
 	protected $service = 'facebook';
 	protected $connection;
@@ -374,7 +374,7 @@ class FacebookService extends SocialFeedService {
 		$response = [];
 		$user = $this->getGraph("$username");
 		$id = $user->id;
-		$data = $this->getGraph("$username/feed");
+		$data = $this->getGraph("$username/feed", ['id','name','message','from','type','created_time','link','object_id', 'picture']);
 		foreach ($data->data as $item) {
 			$item = $this->parseItem($item, $id);
 			if ($item !== null)
@@ -384,7 +384,7 @@ class FacebookService extends SocialFeedService {
 	}
 
 	public function getItem($id) {
-		return $this->parseItem($this->getGraph($id));
+		return $this->parseItem($this->getGraph($id, ['id','name','message','from','type','created_time','link','object_id', 'picture']));
 	}
 
 	public function getIdFromUrl($url) {
@@ -398,9 +398,9 @@ class FacebookService extends SocialFeedService {
 		return $data->{$url}->id;
 	}
 
-	protected function getGraph($endpoint) {
+	protected function getGraph($endpoint, $fields = false) {
 		$credentials = $this->getCredentials();
-		$request = @file_get_contents(self::API_URL.$endpoint."?access_token={$credentials->app_id}|{$credentials->app_secret}");
+		$request = @file_get_contents(self::API_URL.$endpoint."?access_token={$credentials->app_id}|{$credentials->app_secret}".($fields ? '&fields='.(implode(',', $fields)) : ''));
 		if ($request === false) {
 			throw $this->serviceError('Could not load feed, check credentials');
 		}
@@ -419,7 +419,7 @@ class FacebookService extends SocialFeedService {
 		$response->created = strtotime($item->created_time);
 		$user->id = $item->from->id;
 		$user->name = $item->from->name;
-		$user->image = "https://graph.facebook.com/v2.3/{$user->id}/picture/";
+		$user->image = "https://graph.facebook.com/{$user->id}/picture/";
 		$user->link = "https://facebook.com/profile.php?id={$user->id}";
 		$response->link = $item->link;//"http://www.facebook.com/permalink.php?id={$user->id}&v=wall&story_fbid={$response->id}";
 		if (isset($item->message))
@@ -427,7 +427,8 @@ class FacebookService extends SocialFeedService {
 		if (isset($item->type)) {
 			switch ($item->type) {
 				case 'photo':
-					$media->image = "https://graph.facebook.com/{$item->object_id}/picture?type=normal";
+					$photo = $this->getGraph("{$item->object_id}", ['images']);
+					$media->image = $photo->images[1]->source;
 					break;
 				case 'video':
 					$media = $this->mediaFromUrl($item->link);
@@ -444,6 +445,7 @@ class FacebookService extends SocialFeedService {
 
 		$response->user = $user;
 		$response->media = $media;
+
 		return $this->process($response);
 	}
 
