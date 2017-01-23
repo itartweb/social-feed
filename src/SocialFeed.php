@@ -420,8 +420,15 @@ class FacebookService extends SocialFeedService {
     $user->id = $item->from->id;
     $user->name = $item->from->name;
     $headers = get_headers("https://graph.facebook.com/{$user->id}/picture/");
-    print_r($headers); exit;
-    $user->image = "https://graph.facebook.com/{$user->id}/picture/";
+    $location = array_filter($headers, function($header) {
+    	return (strpos($header, 'Location:') !== false);
+    });
+    if(!empty($location)) {
+    	$user->image = trim(str_replace('Location:', '', current($location)));
+    }
+    else {
+    	$user->image = null;
+    }
     $user->link = "https://facebook.com/profile.php?id={$user->id}";
     $response->link = $item->link;//"http://www.facebook.com/permalink.php?id={$user->id}&v=wall&story_fbid={$response->id}";
     if (isset($item->message))
