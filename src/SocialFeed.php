@@ -430,7 +430,7 @@ class FacebookService extends SocialFeedService {
     	$user->image = null;
     }
     $user->link = "https://facebook.com/profile.php?id={$user->id}";
-    $response->link = $item->link;//"http://www.facebook.com/permalink.php?id={$user->id}&v=wall&story_fbid={$response->id}";
+    $response->link = !empty($item->link) ? $item->link : null;
     if (isset($item->message))
       $response->text = $item->message;
     if (isset($item->type)) {
