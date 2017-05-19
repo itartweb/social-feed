@@ -467,7 +467,7 @@ class InstagramService extends SocialFeedService {
   protected $connection;
 
   public function setCredentials(array $credentials) {
-    $this->requireCredentialKeys(['client_id', 'client_secret'], $credentials);
+    $this->requireCredentialKeys(['client_id', 'access_token'], $credentials);
     $this->credentials = (object) $credentials;
   }
 
@@ -498,7 +498,7 @@ class InstagramService extends SocialFeedService {
 
   protected function getApi($endpoint) {
     $credentials = $this->getCredentials();
-    $request = @file_get_contents(self::API_URL.$endpoint.(strpos($endpoint, '?') > -1 ? '&' : '?')."client_id={$credentials->client_id}");
+    $request = @file_get_contents(self::API_URL.$endpoint.(strpos($endpoint, '?') > -1 ? '&' : '?')."client_id={$credentials->client_id}&access_token={$this->credentials->access_token}");
     if ($request === false) {
       throw $this->serviceError("Could not load endpoint '$endpoint' from service {$this->service}, check credentials");
     }
