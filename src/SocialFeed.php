@@ -374,7 +374,7 @@ class FacebookService extends SocialFeedService {
     $response = [];
     $user = $this->getGraph("$username");
     $id = $user->id;
-    $data = $this->getGraph("$username/feed", ['id','name','message','from','type','created_time','link','object_id', 'picture']);
+    $data = $this->getGraph("$username/feed", ['id','name','message','from','type','created_time','link','object_id', 'picture', 'full_picture']);
     foreach ($data->data as $item) {
       $item = $this->parseItem($item, $id);
       if ($item !== null)
@@ -384,7 +384,7 @@ class FacebookService extends SocialFeedService {
   }
 
   public function getItem($id) {
-    return $this->parseItem($this->getGraph($id, ['id','name','message','from','type','created_time','link','object_id', 'picture']));
+    return $this->parseItem($this->getGraph($id, ['id','name','message','from','type','created_time','link','object_id', 'picture', 'full_picture']));
   }
 
   public function getIdFromUrl($url) {
@@ -433,8 +433,8 @@ class FacebookService extends SocialFeedService {
     $response->link = !empty($item->link) ? $item->link : null;
     if (isset($item->message)) {
       $response->text = $item->message;
-	}
-	elseif ($item->type == 'event' && isset($item->name)) {
+	  }
+	  elseif ($item->type == 'event' && isset($item->name)) {
       $response->text = $item->name;
     }
     if (isset($item->type)) {
@@ -445,10 +445,10 @@ class FacebookService extends SocialFeedService {
           break;
         case 'video':
           $media = $this->mediaFromUrl($item->link);
-		  break;
-        case 'event':
-          $media->image = $item->picture;
-		  break;
+		      break;
+        default:
+          $media->image = !empty($item->full_picture) ? $item->full_picture : (!empty($item->picture) ? $item->picture : null);
+		      break;
       }
     }
 
