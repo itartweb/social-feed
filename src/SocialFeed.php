@@ -431,8 +431,12 @@ class FacebookService extends SocialFeedService {
     }
     $user->link = "https://facebook.com/profile.php?id={$user->id}";
     $response->link = !empty($item->link) ? $item->link : null;
-    if (isset($item->message))
+    if (isset($item->message)) {
       $response->text = $item->message;
+	}
+	elseif ($item->type == 'event' && isset($item->name)) {
+      $response->text = $item->name;
+    }
     if (isset($item->type)) {
       switch ($item->type) {
         case 'photo':
@@ -441,6 +445,10 @@ class FacebookService extends SocialFeedService {
           break;
         case 'video':
           $media = $this->mediaFromUrl($item->link);
+		  break;
+        case 'event':
+          $media->image = $item->picture;
+		  break;
       }
     }
 
@@ -448,7 +456,7 @@ class FacebookService extends SocialFeedService {
       $total = count($item->images);
       if ($total > 1)
         $media->image = $item->images[1]->source;
-      else if ($total == 1)
+      elseif ($total == 1)
         $media->image = $item->images[0]->source;
     }
 
