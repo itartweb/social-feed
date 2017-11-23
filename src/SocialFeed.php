@@ -526,7 +526,7 @@ class InstagramService extends SocialFeedService {
     $user->image = $item->user->profile_picture;
     $user->link = "https://instagram.com/{$user->handle}";
     $response->link = $item->link;
-    $response->text = $item->caption->text;
+    $response->text = !empty($item->caption->text) ? $item->caption->text : '';
 
     switch ($item->type) {
       case 'video':
