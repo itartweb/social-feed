@@ -408,7 +408,7 @@ class FacebookService extends SocialFeedService {
   }
 
   private function parseItem($item, $id = null) {
-    if ($id !== null && $item->from->id != $id)
+    if (!isset($item->from->id) || ($id !== null && $item->from->id != $id))
       return null;
 
     $response = new Item();
