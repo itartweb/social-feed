@@ -481,9 +481,8 @@ class InstagramService extends SocialFeedService {
 
   public function getFeed($username) {
     $response = [];
-    $data = $this->getApi("users/search?q=$username");
-    $id = $data->data[0]->id;
-    $data = $this->getApi("users/$id/media/recent/");
+    $data = $this->getApi("users/self");
+    $data = $this->getApi("users/self/media/recent");
     foreach ($data->data as $item) {
       $response[] = $this->parseItem($item);
     }
