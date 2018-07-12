@@ -643,6 +643,9 @@ class InstagramService extends SocialFeedService
             case 'image':
                 $media->image = $item->images->standard_resolution->url;
                 break;
+            case 'carousel':
+                $media->image = $item->carousel_media[0]->images->standard_resolution->url;
+                break;
         }
 
         $response->user = $user;
