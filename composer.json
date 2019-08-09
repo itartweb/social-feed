@@ -1,29 +1,23 @@
 {
-    "name": "brynj-digital/social-feed", 
+    "name": "itartweb/social-feed",
     "type": "library",
     "description": "Get feeds from different social networks in a unified format",
     "keywords": ["social"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Ben Merckx",
-            "email": "ben@codeurs.be",
-            "homepage": "https://codeurs.be",
-            "role": "Developer"
-        },
-        {
-            "name": "Bryn Jones",
-            "email": "bryn.jones@reckless.agency",
+            "name": "Alex Rozumenko",
+            "email": "itartweb@gmail.com",
             "role": "Developer"
         }
     ],
     "support": {
-        "source": "https://github.com/brynj-digital/social-feed",
-        "issues": "https://github.com/brynj-digital/social-feed/issues"
+        "source": "https://github.com/itartweb/social-feed",
+        "issues": "https://github.com/itartweb/social-feed/issues"
     },
     "require": {
         "php": ">=5.4.0",
-        "abraham/twitteroauth": "0.5.*",
+        "abraham/twitteroauth": "0.9.*",
         "aodto/phasher": "dev-master"
     },
     "autoload": {
