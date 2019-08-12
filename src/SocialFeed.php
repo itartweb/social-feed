@@ -1,6 +1,6 @@
 <?php
 
-namespace Brynjdigital\SocialFeed;
+namespace Itartweb\SocialFeed;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 
@@ -114,9 +114,9 @@ class SocialFeed
     public function __construct(array $config = [])
     {
         $this->config = new Config($config);
-        $this->registerService('twitter', 'Brynjdigital\\SocialFeed\\TwitterService');
-        $this->registerService('facebook', 'Brynjdigital\\SocialFeed\\FacebookService');
-        $this->registerService('instagram', 'Brynjdigital\\SocialFeed\\InstagramService');
+        $this->registerService('twitter', 'Itartweb\\SocialFeed\\TwitterService');
+        $this->registerService('facebook', 'Itartweb\\SocialFeed\\FacebookService');
+        $this->registerService('instagram', 'Itartweb\\SocialFeed\\InstagramService');
     }
 
     /**
